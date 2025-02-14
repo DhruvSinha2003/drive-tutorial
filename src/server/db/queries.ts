@@ -1,3 +1,5 @@
+import "server-only";
+
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import {
@@ -5,13 +7,13 @@ import {
     folders_table as folderSchema,
 } from "~/server/db/schema";
 
-export async function getAllParentsForFolder(folderId: number) {
+export const Queries = {
+getAllParentsForFolder: async function (folderId: number) {
   const parents = [];
   let currentId: number | null = folderId;
   const seenIds = new Set(); // Track IDs we've already processed
 
   while (currentId !== null) {
-    // Prevent infinite loops
     if (seenIds.has(currentId)) {
       break;
     }
@@ -31,20 +33,20 @@ export async function getAllParentsForFolder(folderId: number) {
     currentId = folder[0].parent === currentId ? null : folder[0].parent;
   }
   return parents;
-}
+},
 
-export function getFoldersByParent(folderId: number) {
+getFoldersByParent: function (folderId: number) {
     return db
         .select()
         .from(folderSchema)
         .where(eq(folderSchema.parent, folderId));
-}
+},
 
-export function getFilesByParent(folderId: number) {
+getFilesByParent: function (folderId: number) {
     return db
         .select()
         .from(fileSchema)
         .where(eq(fileSchema.parent, folderId));
 }
 
- 
+}
