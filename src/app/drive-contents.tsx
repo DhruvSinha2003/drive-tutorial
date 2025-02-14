@@ -1,4 +1,5 @@
 "use client";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ChevronRight, Upload } from "lucide-react";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
@@ -34,13 +35,17 @@ export default function DriveContents(props: {
               </div>
             ))}
           </div>
-          <Button
-            onClick={handleUpload}
-            className="bg-blue-600 text-white hover:bg-blue-700"
-          >
-            <Upload className="mr-2" size={20} />
-            Upload
-          </Button>
+          <div>
+            {" "}
+            <header className="flex h-16 items-center justify-end gap-4 p-4">
+              <SignedOut>
+                <SignInButton />
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </header>
+          </div>
         </div>
         <div className="rounded-lg bg-gray-800 shadow-xl">
           <div className="border-b border-gray-700 px-6 py-4">
