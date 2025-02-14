@@ -1,6 +1,6 @@
 import { mockFiles, mockFolders } from "~/lib/mock-data";
 import { db } from "~/server/db";
-import { files, folders } from "~/server/db/schema";
+import { files_table, folders_table } from "~/server/db/schema";
 
 // page.tsx
 export default function SandboxPage() {
@@ -12,14 +12,14 @@ export default function SandboxPage() {
           "use server";
 
           // First insert the root folder
-          const rootFolder = await db.insert(folders).values({
+          const rootFolder = await db.insert(folders_table).values({
             id: 1,
             name: "root folder",
             parent: 1, // Root folder references itself
           });
 
           // Then insert other folders
-          const otherFolders = await db.insert(folders).values(
+          const otherFolders = await db.insert(folders_table).values(
             mockFolders.slice(1).map((folder, index) => ({
               id: index + 2, // Start from ID 2 since root is 1
               name: folder.name,
@@ -28,7 +28,7 @@ export default function SandboxPage() {
           );
 
           // Then insert files
-          const fileInsert = await db.insert(files).values(
+          const fileInsert = await db.insert(files_table).values(
             mockFiles.map((file, index) => ({
               id: file.id,
               name: file.name,

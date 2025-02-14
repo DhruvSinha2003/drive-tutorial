@@ -4,7 +4,7 @@ import { bigint, index, int, singlestoreTable, singlestoreTableCreator, text } f
 
 export const createTable = singlestoreTableCreator((name)=> `drive-tutorial_${name}`);
 
-export const folders = createTable("folders_table", { 
+export const folders_table = createTable("folders_table", { 
   id: bigint("id", {mode:"number", unsigned: true}).primaryKey().autoincrement(),
   name: text("name").notNull(),
   // Root folder will reference its own ID
@@ -13,7 +13,7 @@ export const folders = createTable("folders_table", {
   parentIndex: index("parent_index").on(t.parent),
 }));
 
-export const files = createTable("files_table", {
+export const files_table = createTable("files_table", {
   id: bigint("id", {mode:"number", unsigned: true}).primaryKey().autoincrement(),
   name: text("name").notNull(),
   url: text("url").notNull(),

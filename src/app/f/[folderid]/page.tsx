@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 import {
-  files as fileSchema,
-  folders as folderSchema,
+  files_table as fileSchema,
+  folders_table as folderSchema,
 } from "~/server/db/schema";
 import DriveContents from "../../drive-contents";
 
@@ -29,7 +29,6 @@ async function getAllParents(folderId: number) {
     }
     parents.unshift(folder[0]);
 
-    // Only update currentId if the parent is different from the current ID
     currentId = folder[0].parent === currentId ? null : folder[0].parent;
   }
   return parents;
@@ -56,20 +55,10 @@ export default async function GoogleDriveClone(props: {
 
   const parentsPromise = getAllParents(parsedFolderId);
 
-  // Add some debug logging
   const [folders, files, parents] = await Promise.all([
-    foldersPromise.then((f) => {
-      console.log("Folders:", f);
-      return f;
-    }),
-    filesPromise.then((f) => {
-      console.log("Files:", f);
-      return f;
-    }),
-    parentsPromise.then((p) => {
-      console.log("Parents:", p);
-      return p;
-    }),
+    foldersPromise,
+    filesPromise,
+    parentsPromise,
   ]);
 
   return <DriveContents files={files} folders={folders} parents={parents} />;
