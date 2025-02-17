@@ -54,7 +54,7 @@ getFilesByParent: function (folderId: number) {
 
 export const MUTATIONS = {
     createFile: async function (input:{
-      file: {name: string,size: number, url: string};userId:string}) {
-        return await db.insert(fileSchema).values({...input.file, parent: 1});
+      file: {name: string,size: number, url: string,parent:string};userId:string}) {
+        return await db.insert(fileSchema).values({...input.file, parent: input.file.parent});
     }
 }

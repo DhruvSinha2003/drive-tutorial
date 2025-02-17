@@ -1,44 +1,57 @@
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { mockFiles, mockFolders } from "~/lib/mock-data";
 import { db } from "~/server/db";
 import { files_table, folders_table } from "~/server/db/schema";
 
 // page.tsx
-export default function SandboxPage() {
+export default async function SandboxPage() {
+  const user = await auth();
+  if (!user.userId) {
+    throw new Error("Unauthorized");
+  }
+  const folders = await db
+    .select()
+    .from(folders_table)
+    .where(eq(folders_table.ownerId, user.userId));
+
+  console.log(folders);
   return (
     <div>
       Seed Function
       <form
         action={async () => {
           "use server";
+          const user = await auth();
+          if (!user.userId) {
+            throw new Error("Unauthorized");
+          }
+          const rootFolder = await db
+            .insert(folders_table)
+            .values({
+              name: "root",
+              ownerId: user.userId,
+              parent: 1,
+            })
+            .$returningId();
 
-          // First insert the root folder
-          const rootFolder = await db.insert(folders_table).values({
-            id: 1,
-            name: "root folder",
-            parent: 1, // Root folder references itself
-          });
+          const insertFolders = mockFolders.map((folder) => ({
+            name: folder.name,
+            parent: rootFolder[0]!.id,
+            ownerId: user.userId,
+          }));
 
-          // Then insert other folders
-          const otherFolders = await db.insert(folders_table).values(
-            mockFolders.slice(1).map((folder, index) => ({
-              id: index + 2, // Start from ID 2 since root is 1
-              name: folder.name,
-              parent: 1, // All other folders are children of root
-            })),
-          );
+          await db.insert(folders_table).values(insertFolders);
 
-          // Then insert files
-          const fileInsert = await db.insert(files_table).values(
-            mockFiles.map((file, index) => ({
-              id: file.id,
-              name: file.name,
-              url: file.url,
-              parent: (index % 3) + 1, // Distribute files among folders 1, 2, and 3
-              size: 500,
-            })),
-          );
+          // const insertFiles = mockFiles.map((file) => ({
+          //   name: file.name,
+          //   parent: file.parent,
+          //   ownerId: user.userId,
+          //   url: file.url,
+          //   size: file.size,
+          // }));
 
-          console.log(rootFolder, otherFolders, fileInsert);
+          // await db.insert(folders_table).values(insertFolders);
         }}
       >
         <button type="submit">Seed</button>
