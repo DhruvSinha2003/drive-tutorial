@@ -15,8 +15,6 @@ export default async function Sandbox() {
     .from(folders_table)
     .where(eq(folders_table.ownerId, user.userId));
 
-  console.log(folders);
-
   return (
     <div>
       <form

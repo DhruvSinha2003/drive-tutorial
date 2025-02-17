@@ -5,7 +5,6 @@ export default async function GoogleDriveClone(props: {
   params: Promise<{ folderid: string }>;
 }) {
   const params = await props.params;
-  console.log(params);
 
   const parsedFolderId = parseInt(params.folderid);
   if (isNaN(parsedFolderId)) {

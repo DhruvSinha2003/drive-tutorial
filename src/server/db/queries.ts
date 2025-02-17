@@ -5,7 +5,6 @@ import { db } from "~/server/db";
 import {
   files_table as filesSchema,
   folders_table as foldersSchema,
-  type DB_FileType,
 } from "~/server/db/schema";
 
 export const QUERIES = {
@@ -39,7 +38,6 @@ export const QUERIES = {
     return parents;
   },
   getFolderById: async function (folderId: number) {
-    console.log("getFolderById called with folderId:", folderId, typeof folderId); // ADD THIS
     const folder = await db
       .select()
       .from(foldersSchema)
@@ -59,7 +57,6 @@ export const MUTATIONS = {
     };
     userId: string;
   }) {
-    console.log("createFile called with input:", input); // ADD THIS
     return await db.insert(filesSchema).values({
       ...input.file,
       ownerId: input.userId,
