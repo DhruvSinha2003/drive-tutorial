@@ -52,6 +52,7 @@ export default function DriveContents(props: {
               </div>
             ))}
           </div>
+
           <div>
             <header className="flex h-16 items-center justify-end gap-4 p-4">
               <SignedOut>
@@ -62,6 +63,42 @@ export default function DriveContents(props: {
               </SignedIn>
             </header>
           </div>
+          {isCreatingFolder ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                placeholder="Folder name"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                className="h-10 rounded-md border border-slate-700/50 bg-slate-800/50 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter") {
+                    await handleCreateFolder();
+                  }
+                }}
+              />
+              <button
+                onClick={handleCreateFolder}
+                className="h-10 rounded-md bg-slate-700 px-4 py-2 text-slate-100 transition-colors hover:bg-slate-600"
+              >
+                Create
+              </button>
+              <button
+                onClick={() => setIsCreatingFolder(false)}
+                className="h-10 rounded-md px-4 py-2 text-slate-400 transition-colors hover:text-slate-300"
+              >
+                Cancel
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsCreatingFolder(true)}
+              className="flex h-10 items-center gap-2 rounded-md bg-slate-700 px-4 py-2 text-slate-100 transition-colors hover:bg-slate-600"
+            >
+              <FolderPlus size={16} />
+              New Folder
+            </button>
+          )}
         </div>
 
         <div className="rounded-lg bg-slate-800/50 shadow-xl backdrop-blur-sm">
@@ -84,6 +121,7 @@ export default function DriveContents(props: {
         </div>
 
         <div className="mt-6 flex items-center gap-4">
+          <div className="flex items-center gap-4"></div>
           <UploadButton
             endpoint="driveUploader"
             onClientUploadComplete={() => {
@@ -91,43 +129,6 @@ export default function DriveContents(props: {
             }}
             input={{ folderId: props.currentFolderId }}
           />
-
-          {isCreatingFolder ? (
-            <div className="flex items-center gap-2">
-              <input
-                type="text"
-                placeholder="Folder name"
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                className="rounded-md border border-slate-700/50 bg-slate-800/50 px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                onKeyDown={async (e) => {
-                  if (e.key === "Enter") {
-                    await handleCreateFolder();
-                  }
-                }}
-              />
-              <button
-                onClick={handleCreateFolder}
-                className="rounded-md bg-slate-700 px-4 py-2 text-slate-100 transition-colors hover:bg-slate-600"
-              >
-                Create
-              </button>
-              <button
-                onClick={() => setIsCreatingFolder(false)}
-                className="rounded-md px-4 py-2 text-slate-400 transition-colors hover:text-slate-300"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setIsCreatingFolder(true)}
-              className="flex items-center gap-2 rounded-md bg-slate-700 px-4 py-2 text-slate-100 transition-colors hover:bg-slate-600"
-            >
-              <FolderPlus size={16} />
-              New Folder
-            </button>
-          )}
         </div>
       </div>
     </div>
