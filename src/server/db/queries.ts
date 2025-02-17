@@ -39,12 +39,14 @@ export const QUERIES = {
     return parents;
   },
   getFolderById: async function (folderId: number) {
+    console.log("getFolderById called with folderId:", folderId, typeof folderId); // ADD THIS
     const folder = await db
       .select()
       .from(foldersSchema)
       .where(eq(foldersSchema.id, folderId));
     return folder[0];
   },
+  
 };
 
 export const MUTATIONS = {
@@ -57,9 +59,11 @@ export const MUTATIONS = {
     };
     userId: string;
   }) {
+    console.log("createFile called with input:", input); // ADD THIS
     return await db.insert(filesSchema).values({
       ...input.file,
       ownerId: input.userId,
     });
   },
+  
 };
