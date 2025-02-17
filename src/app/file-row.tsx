@@ -29,7 +29,6 @@ export function FileRow(props: { file: typeof files_table.$inferSelect }) {
 
 export function FolderRow(props: {
   folder: typeof folders_table.$inferSelect;
-  handleFolderClick: () => void;
 }) {
   const { folder } = props;
   return (
