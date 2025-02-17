@@ -70,5 +70,39 @@ export const MUTATIONS = {
       ownerId: input.userId,
     });
   },
-  
+
+  onboardUser : async function (userId: string) {
+    const rootFolder = await db
+      .insert(foldersSchema).values({
+        name: "Root",
+        parent: null,
+        ownerId: userId,
+      }).$returningId();
+
+      const rootFolderId = rootFolder[0]!.id;
+
+      const documentsFolder = await db
+      .insert(foldersSchema).values({
+        name: "Documents",
+        parent: rootFolderId,
+        ownerId: userId,
+      }).$returningId();
+
+      const documentsFolderId = documentsFolder[0]!.id;
+
+      await db
+      .insert(foldersSchema).values([
+      {
+        name: "Resume",
+        parent: documentsFolderId,
+        ownerId: userId,
+      },
+      {
+        name: "Images",
+        parent: rootFolderId,
+        ownerId: userId,
+      },
+         ]);
+    return rootFolderId;
+    }
 };
