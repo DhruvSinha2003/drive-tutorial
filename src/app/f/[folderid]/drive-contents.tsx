@@ -4,7 +4,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { files_table, folders_table } from "~/server/db/schema";
-import { UploadButton } from "../components/uploadthing";
+import { UploadButton } from "../../../components/uploadthing";
 import { FileRow, FolderRow } from "./file-row";
 
 export default function DriveContents(props: {
